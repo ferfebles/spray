@@ -5,7 +5,7 @@ It lacks:
 - Conditional breakpoints.
 
 It has:
-- Ruby debugger integrated in a REPL tab.
+- Ruby debugger integrated in a REPL tab (variables, eval, conditional breakpoints... and much more).
 - ToolBar debug buttons: debug, next, step, continue and list.
 - Tags current line in editor tab.
 
@@ -26,3 +26,7 @@ If you still want to install this:
 - Install ruby-debug gem.
 - Download and copy the spray folder to your redcar plugins folder.
 - Restart redcar, and you can see the new buttons in the redcar ToolBar.
+
+You can see it in action:
+http://s3.amazonaws.com/files.posterous.com/temp-2011-07-22/eEfnBmyqCjgkzrkxesmCdIgpvvwIghxFJdFtvAyFupucGdjFtxgwFbpCAjFA/SprayTest.swf?AWSAccessKeyId=AKIAJFZAE65UYRT34AOQ&Expires=1311401313&Signature=WLEFFjhmHW4u59KNqKVf8oqwhq4%3D
+
