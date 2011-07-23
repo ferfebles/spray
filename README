@@ -1,0 +1,28 @@
+Basic, simple (beta) debugger plugin for redcar editor.
+
+It lacks:
+- Variables, eval, and call stack information.
+- Conditional breakpoints.
+
+It has:
+- Ruby debugger integrated in a REPL tab.
+- ToolBar debug buttons: debug, next, step, continue and list.
+- Tags current line in editor tab.
+
+Working in:
+- Breakpoint toolbar button.
+- Breakpoint persistence between restarts.
+
+If you use rdebug, probably this is more than you ever needed.
+If you use Netbeans or Rubymine, this could seem like a wombat against a sabretooth. 
+If you use Redcar, take a look at http://blog.bithug.org/2011/04/redcar-debug, it's far more advanced than this project.
+
+Why would you like to test this plugin?
+- It gives access to the rdebug command line power: conditional breakpoints, frames...
+- It makes rdebug easier to use.
+- It's small and hackable. You can add your own commands or support to new languages. 
+
+If you still want to install this:
+- Install ruby-debug gem.
+- Download and copy the spray folder to your redcar plugins folder.
+- Restart redcar, and you can see the new buttons in the redcar ToolBar.
