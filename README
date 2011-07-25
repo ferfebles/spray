@@ -9,6 +9,9 @@ It has:
 - ToolBar debug buttons: debug, next, step, continue and list.
 - Tags current line in editor tab.
 
+Done:
+- Running from ~/.redcar/plugins
+
 Working in:
 - Breakpoint toolbar button.
 - Breakpoint persistence between restarts.

@@ -41,9 +41,9 @@ module Redcar
         def execute(command)
           begin
             retries=1
+            Annotations.remove(@previous_file, @previous_line)
             output= @controller.send_command(command)
             @current_line, @current_file= @controller.current_position
-            Annotations.remove(@previous_file, @previous_line)
             Annotations.set(@current_file, @current_line)
             @previous_file, @previous_line = @current_file, @current_line
             return output

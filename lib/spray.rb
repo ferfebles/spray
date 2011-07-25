@@ -23,6 +23,7 @@ module Redcar
         item "Next", {:icon=>File.join(Redcar::ICONS_DIRECTORY, "arrow-270.png"), :command=>SpraySendNext}
         item "Step", {:icon=>File.join(Redcar::ICONS_DIRECTORY, "arrow-315.png"), :command=>SpraySendStep}
         item "Continue", {:icon=>File.join(Redcar::ICONS_DIRECTORY, "arrow-step.png"), :command=>SpraySendContinue}
+        item "Breakpoint", {:icon=>File.join(Redcar::ICONS_DIRECTORY, "control-pause.png"), :command=>SprayToggleBreakpoint}
         item "List", {:icon=>File.join(Redcar::ICONS_DIRECTORY, "arrow-continue.png"), :command=>SpraySendList}
       end
     end
@@ -37,6 +38,14 @@ module Redcar
       end
     end
     
+    class SprayToggleBreakpoint < Redcar::Command
+      def execute
+        filename= SprayTabs.focussed_path
+        linenum= SprayTabs.focussed_line
+        Redcar.safely{SprayTabs.send_to_repl("break #{filename}:#{linenum}")}
+      end
+    end
+
     class SpraySendList < Redcar::Command
       def execute; Redcar.safely{SprayTabs.send_to_repl("list")}; end
     end

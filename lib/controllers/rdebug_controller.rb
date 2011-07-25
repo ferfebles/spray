@@ -1,7 +1,7 @@
 require 'net/telnet'
 
 class RDebugController
-  RDEBUG_NO_PRINT= File.join(Redcar.root, "plugins", "spray", "lib", "controllers", "rdebug_no_print.rb")
+  RDEBUG_NO_PRINT= File.expand_path(File.join(File.dirname(__FILE__), "rdebug_no_print.rb"))
   RDEBUG_PROMPT= /PROMPT \(rdb:\d*\) |CONFIRM Really quit\? \(y\/n\)/
   @@current_port= 31415
   @@s= nil
