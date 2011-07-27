@@ -32,7 +32,7 @@ module Redcar
           when '.java' then raise("Java support still not implemented")
           else raise("Spray can't handle this file type")
           end
-          @previous_file, @previous_line = path, 1
+          @annotations= Hash.new{|h,k| h[k]= Array.new}
           Redcar::Runnables.run_process(File.dirname(path), @controller.command, "SprayOutput")
         end
         
@@ -41,14 +41,20 @@ module Redcar
         def execute(command)
           begin
             retries=1
-            Annotations.remove(@previous_file, @previous_line)
             output= @controller.send_command(command)
-            @current_line, @current_file= @controller.current_position
-            Annotations.set(@current_file, @current_line)
-            @previous_file, @previous_line = @current_file, @current_line
+            update_annotations([@controller.current_position], Annotations::CURRENT_LINE)
+            update_annotations(@controller.current_breakpoints, Annotations::BREAKPOINT)
             return output
-          rescue
+          rescue 
             (@controller.connect; retry) if 0 <= (retries-=1)
+          end
+        end
+        
+        def update_annotations(current_positions, type)
+          if @annotations[type] != current_positions or type==Annotations::CURRENT_LINE
+            @annotations[type].each{|position| Annotations.remove(position, type)}
+            current_positions.each {|position| Annotations.set(position, type)}
+            @annotations[type]= current_positions
           end
         end
       end

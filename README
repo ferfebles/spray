@@ -11,9 +11,10 @@ It has:
 
 Done:
 - Running from ~/.redcar/plugins
+- Breakpoint toolbar sets breakpoint.
 
 Working in:
-- Breakpoint toolbar button.
+- Toggle breakpoint.
 - Breakpoint persistence between restarts.
 
 If you use rdebug, probably this is more than you ever needed.

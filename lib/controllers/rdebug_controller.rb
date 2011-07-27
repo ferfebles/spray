@@ -19,8 +19,8 @@ class RDebugController
       @@s= Net::Telnet::new("Host"=> @host, "Port"=> @port, "Prompt"=> RDEBUG_PROMPT,
       "Telnetmode"=> false, "Timeout"=> 2, "Waittime"=> 0)
     rescue
-      sleep 0.2
-      retry if 0 <= (retries-=0.2)
+      sleep 0.1
+      retry if 0 <= (retries-=0.1)
       raise("Timeout connecting to rdebug on #{@host}:#{@port}")
     end
     @@s.waitfor(/PROMPT \(rdb:\d*\)/)
@@ -30,9 +30,13 @@ class RDebugController
     @@s.cmd(command) || ''
   end
   
+  def current_breakpoints
+    send_command("info break").scan(/(\/.*):(\d*)/).map{|file,line| [file,line.to_i]}
+  end
+  
   def current_position
-    line, file = @@s.cmd("info line").scan(/Line\s(\d+).*"(.*)"/).flatten
-    [line.to_i, File.expand_path(file, File.dirname(@path))]
+    line, file = send_command("info line").scan(/Line\s(\d+).*"(.*)"/).flatten
+    [File.expand_path(file, File.dirname(@path)), line.to_i]
   end
   
 end
