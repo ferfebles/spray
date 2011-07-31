@@ -9,7 +9,7 @@ module Redcar
       
       def initialize
         @spray_path  = Redcar.app.focussed_window.focussed_notebook_tab_document.path
-        raise "No file, please select another tab" if @spray_path.nil?
+        raise "No file to debug, please select another tab" if @spray_path.nil?
         @evaluator   = SprayEvaluator.new(@spray_path)
         @title = "Spray: #{File.basename(@spray_path)}"
         @prompt= "(#{File.extname(@spray_path)})>"
@@ -24,9 +24,9 @@ module Redcar
       end
       
       class SprayEvaluator
-        
         def initialize(path)
           @binding   = binding
+          @path      = path
           @controller= case File.extname(path)
           when '.rb'   then RDebugController.new(path)
           when '.java' then raise("Java support still not implemented")
@@ -38,23 +38,26 @@ module Redcar
         
         def inspect; "SprayEvaluator"; end
         
+        def toggle_breakpoint(filename, linenum)
+          @controller.toggle_breakpoint(filename, linenum)
+        end
+        
         def execute(command)
           begin
-            retries=1
-            output= @controller.send_command(command)
-            update_annotations([@controller.current_position], Annotations::CURRENT_LINE)
+            @controller.send_command(command)
+          rescue
+            @controller.connect; retry
+          ensure
+            update_annotations(@controller.current_position, Annotations::CURRENT_LINE)
             update_annotations(@controller.current_breakpoints, Annotations::BREAKPOINT)
-            return output
-          rescue 
-            (@controller.connect; retry) if 0 <= (retries-=1)
           end
         end
         
         def update_annotations(current_positions, type)
-          if @annotations[type] != current_positions or type==Annotations::CURRENT_LINE
+          if @annotations[type] != current_positions
             @annotations[type].each{|position| Annotations.remove(position, type)}
-            current_positions.each {|position| Annotations.set(position, type)}
             @annotations[type]= current_positions
+            @annotations[type].each{|position| Annotations.set(position, type)}
           end
         end
       end

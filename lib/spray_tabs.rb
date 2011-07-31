@@ -3,6 +3,14 @@
 module SprayTabs
   
   ##
+  # call a REPL method
+  def self.call_in_repl(method, args)
+    evaluator= SprayTabs.find_first_matching_tab('Spray: ').document.mirror.evaluator
+    puts "Calling #{evaluator.inspect}.#{method}(#{args.join(', ')})"
+    evaluator.send(method, *args)
+  end
+  
+  ##
   # Sends and evaluates command with RDebug REPL
   def self.send_to_repl(command)
     tab= SprayTabs.find_first_matching_tab('Spray: ')

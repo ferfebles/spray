@@ -26,17 +26,32 @@ class RDebugController
     @@s.waitfor(/PROMPT \(rdb:\d*\)/)
   end
   
+  def method_missing(method, args)
+    send_command("#{method} #{args}")
+  end
+  
   def send_command(command)
+    puts "command: #{command}"
     @@s.cmd(command) || ''
   end
   
-  def current_breakpoints
-    send_command("info break").scan(/(\/.*):(\d*)/).map{|file,line| [file,line.to_i]}
+  def toggle_breakpoint(filename, linenum)
+    if current_breakpoints.include?([filename,linenum])
+      breaknum= send_command("info break").scan(/(\d+).*#{filename.gsub('/','\/')}:#{linenum}/).flatten.first
+      puts breaknum.inspect
+      send_command("del #{breaknum}")
+    else
+      send_command("break #{filename}:#{linenum}")
+    end
   end
   
+  def current_breakpoints
+    send_command("info break").scan(/(\/.*):(\d*)/).map{|file,line| [file,line.to_i]} rescue []
+  end
+  
+  # Returns array with current position: [[file, line]]
   def current_position
-    line, file = send_command("info line").scan(/Line\s(\d+).*"(.*)"/).flatten
-    [File.expand_path(file, File.dirname(@path)), line.to_i]
+    send_command("info line").scan(/Line\s(\d+).*"(.*)"/).map{|line,file| [file,line.to_i]} rescue []
   end
   
 end
