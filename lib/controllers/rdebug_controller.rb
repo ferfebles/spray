@@ -17,7 +17,7 @@ class RDebugController
     retries= 1 #1 seconds of timeout
     begin
       @@s= Net::Telnet::new("Host"=> @host, "Port"=> @port, "Prompt"=> RDEBUG_PROMPT,
-      "Telnetmode"=> false, "Timeout"=> 2, "Waittime"=> 0)
+      "Telnetmode"=> false, "Timeout"=> 1, "Waittime"=> 0)
     rescue
       sleep 0.1
       retry if 0 <= (retries-=0.1)
@@ -26,19 +26,19 @@ class RDebugController
     @@s.waitfor(/PROMPT \(rdb:\d*\)/)
   end
   
-  def method_missing(method, args)
-    send_command("#{method} #{args}")
-  end
-  
-  def send_command(command)
-    puts "command: #{command}"
-    @@s.cmd(command) || ''
+  def execute_command(command)
+    case command
+    when /^\s*toggle_breakpoint/
+      file, line= command.scan(/'(.*)':(\d+)/).first
+      toggle_breakpoint(file ,line.to_i)
+    else
+      send_command(command)
+    end
   end
   
   def toggle_breakpoint(filename, linenum)
     if current_breakpoints.include?([filename,linenum])
-      breaknum= send_command("info break").scan(/(\d+).*#{filename.gsub('/','\/')}:#{linenum}/).flatten.first
-      puts breaknum.inspect
+      breaknum= send_command("info break").scan(/(\d+).*#{filename.gsub('/','\/')}:#{linenum}/).first.first
       send_command("del #{breaknum}")
     else
       send_command("break #{filename}:#{linenum}")
@@ -52,6 +52,10 @@ class RDebugController
   # Returns array with current position: [[file, line]]
   def current_position
     send_command("info line").scan(/Line\s(\d+).*"(.*)"/).map{|line,file| [file,line.to_i]} rescue []
+  end
+  
+  def send_command(command)
+    @@s.cmd(command) || ''
   end
   
 end

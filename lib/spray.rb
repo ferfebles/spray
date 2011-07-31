@@ -42,8 +42,7 @@ module Redcar
       def execute
         filename= SprayTabs.focussed_path
         linenum= SprayTabs.focussed_line
-        Redcar.safely{SprayTabs.call_in_repl(:toggle_breakpoint, [filename, linenum])}
-        Redcar.safely{SprayTabs.send_to_repl("info break")}
+        Redcar.safely{SprayTabs.send_to_repl("toggle_breakpoint '#{filename}':#{linenum}")}
       end
     end
 

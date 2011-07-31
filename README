@@ -6,16 +6,13 @@ It lacks:
 
 It has:
 - Ruby debugger integrated in a REPL tab (variables, eval, conditional breakpoints... and much more).
-- ToolBar debug buttons: debug, next, step, continue and list.
+- ToolBar debug buttons: debug, breakpoint, next, step, continue and list.
 - Tags current line in editor tab.
-
-Done:
-- Running from ~/.redcar/plugins
-- Breakpoint toolbar sets breakpoint.
+- Breakpoint persistence between restarts.
 
 Working in:
-- Toggle breakpoint.
-- Breakpoint persistence between restarts.
+- Watches and variables.
+- Testing with linux/osx/win - MRI/Jruby/Rubinius.
 
 If you use rdebug, probably this is more than you ever needed.
 If you use Netbeans or Rubymine, this could seem like a wombat against a sabretooth. 

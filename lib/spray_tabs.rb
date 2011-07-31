@@ -3,19 +3,11 @@
 module SprayTabs
   
   ##
-  # call a REPL method
-  def self.call_in_repl(method, args)
-    evaluator= SprayTabs.find_first_matching_tab('Spray: ').document.mirror.evaluator
-    puts "Calling #{evaluator.inspect}.#{method}(#{args.join(', ')})"
-    evaluator.send(method, *args)
-  end
-  
-  ##
-  # Sends and evaluates command with RDebug REPL
+  # Sends and evaluates command with Spray REPL
   def self.send_to_repl(command)
     tab= SprayTabs.find_first_matching_tab('Spray: ')
     if tab.nil?
-      raise "Open a file and goto Plugins -> Spray -> Debug"
+      raise "Spray, open a file and goto Plugins -> Spray -> Debug"
     else
       tab.edit_view.document.insert_at_cursor(command)
       tab.edit_view.document.mirror.evaluate(command)

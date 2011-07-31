@@ -20,44 +20,49 @@ module Redcar
       def format_error(e)
         backtrace= e.backtrace.reject{|l| l=~ /repl_mirror/}
         backtrace.unshift("(repl):1")
-        "#{e.class}: #{e.message}" #\n        '#{backtrace.join("'\n        '")}'"
+        "#{e.class}: #{e.message}" #\n        ##{backtrace.join("\n        #")}"
       end
       
       class SprayEvaluator
         def initialize(path)
           @binding   = binding
-          @path      = path
           @controller= case File.extname(path)
           when '.rb'   then RDebugController.new(path)
           when '.java' then raise("Java support still not implemented")
           else raise("Spray can't handle this file type")
           end
-          @annotations= Hash.new{|h,k| h[k]= Array.new}
+          @annotations= Redcar::Plugin::Storage.new("SprayAnnotations")
+          @annotations.set_default(Annotations::CURRENT_LINE,[])
+          @annotations.set_default(Annotations::BREAKPOINT,[])
           Redcar::Runnables.run_process(File.dirname(path), @controller.command, "SprayOutput")
         end
         
         def inspect; "SprayEvaluator"; end
         
-        def toggle_breakpoint(filename, linenum)
-          @controller.toggle_breakpoint(filename, linenum)
-        end
-        
         def execute(command)
           begin
-            @controller.send_command(command)
+            @controller.execute_command(command)
           rescue
-            @controller.connect; retry
+            @controller.connect
+            (initialize_breakpoints; retry) unless command=~/^\s*info/
           ensure
             update_annotations(@controller.current_position, Annotations::CURRENT_LINE)
             update_annotations(@controller.current_breakpoints, Annotations::BREAKPOINT)
           end
         end
         
+        def initialize_breakpoints
+          @annotations[Annotations::BREAKPOINT].each{|file, line| 
+            @controller.execute_command("toggle_breakpoint '#{file}':#{line}")}
+          @annotations[Annotations::BREAKPOINT]=[]
+          update_annotations(@controller.current_breakpoints, Annotations::BREAKPOINT)
+        end
+        
         def update_annotations(current_positions, type)
           if @annotations[type] != current_positions
             @annotations[type].each{|position| Annotations.remove(position, type)}
-            @annotations[type]= current_positions
-            @annotations[type].each{|position| Annotations.set(position, type)}
+            current_positions.each{|position| Annotations.set(position, type)}
+            @annotations[type]= current_positions unless current_positions==[]
           end
         end
       end
