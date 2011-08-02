@@ -10,7 +10,7 @@ class RDebugController
   
   def initialize(path, host='localhost', port=nil)
     @path, @host, @port = path, host, (port || @@current_port+=1)
-    @command= "rdebug --debug -nx -p #{@port} -s -w -r '#{RDEBUG_NO_PRINT}' '#{@path}'"
+    @command= "rdebug -nx -p #{@port} -s -w -r '#{RDEBUG_NO_PRINT}' '#{@path}'"
   end
   
   def connect
@@ -52,6 +52,10 @@ class RDebugController
   # Returns array with current position: [[file, line]]
   def current_position
     send_command("info line").scan(/Line\s(\d+).*"(.*)"/).map{|line,file| [file,line.to_i]} rescue []
+  end
+  
+  def connected?
+    @@s.cmd("info line") rescue false
   end
   
   def send_command(command)

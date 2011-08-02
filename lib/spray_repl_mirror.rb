@@ -32,7 +32,7 @@ module Redcar
           else raise("Spray can't handle this file type")
           end
           @annotations= Redcar::Plugin::Storage.new("SprayAnnotations")
-          @annotations.set_default(Annotations::CURRENT_LINE,[])
+          @annotations[Annotations::CURRENT_LINE]=[[path,1]]
           @annotations.set_default(Annotations::BREAKPOINT,[])
           Redcar::Runnables.run_process(File.dirname(path), @controller.command, "SprayOutput")
         end
@@ -62,7 +62,7 @@ module Redcar
           if @annotations[type] != current_positions
             @annotations[type].each{|position| Annotations.remove(position, type)}
             current_positions.each{|position| Annotations.set(position, type)}
-            @annotations[type]= current_positions unless current_positions==[]
+            @annotations[type]= current_positions if @controller.connected?
           end
         end
       end
