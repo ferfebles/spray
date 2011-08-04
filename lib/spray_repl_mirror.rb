@@ -34,7 +34,7 @@ module Redcar
           @annotations= Redcar::Plugin::Storage.new("SprayAnnotations")
           @annotations[Annotations::CURRENT_LINE]=[[path,1]]
           @annotations.set_default(Annotations::BREAKPOINT,[])
-          Redcar::Runnables.run_process(File.dirname(path), @controller.command, "SprayOutput")
+          Redcar::Runnables.run_process(File.dirname(path), @controller.launch_debugger_command, "SprayOutput")
         end
         
         def inspect; "SprayEvaluator"; end
