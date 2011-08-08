@@ -41,11 +41,10 @@ module Redcar
         
         def execute(command)
           begin
+            init_needed=true unless @controller.connected?
             @controller.execute_command(command)
-          rescue
-            @controller.connect
-            (initialize_breakpoints; retry) unless command=~/^\s*info/
           ensure
+            initialize_breakpoints if (init_needed and @controller.connected?)
             update_annotations(@controller.current_position, Annotations::CURRENT_LINE)
             update_annotations(@controller.current_breakpoints, Annotations::BREAKPOINT)
           end
@@ -55,7 +54,6 @@ module Redcar
           @annotations[Annotations::BREAKPOINT].each{|file, line| 
             @controller.execute_command("toggle_breakpoint '#{file}':#{line}")}
           @annotations[Annotations::BREAKPOINT]=[]
-          update_annotations(@controller.current_breakpoints, Annotations::BREAKPOINT)
         end
         
         def update_annotations(current_positions, type)

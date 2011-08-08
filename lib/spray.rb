@@ -22,7 +22,7 @@ module Redcar
         item "Debug file", {:icon=>File.join(Redcar::ICONS_DIRECTORY, "arrow-step-over.png"), :command=>OpenSprayREPL}
         item "Breakpoint", {:icon=>File.join(Redcar::ICONS_DIRECTORY, "control-pause.png"), :command=>SprayToggleBreakpoint}
         item "Continue", {:icon=>File.join(Redcar::ICONS_DIRECTORY, "arrow-step.png"), :command=>SpraySendContinue}
-        #item "Stop", {:icon=>File.join(Redcar::ICONS_DIRECTORY, "control-stop-square.png"), :command=>SpraySendStop}
+        item "Interrupt", {:icon=>File.join(Redcar::ICONS_DIRECTORY, "control-stop-square.png"), :command=>SpraySendInterrupt}
         item "Next", {:icon=>File.join(Redcar::ICONS_DIRECTORY, "arrow-270.png"), :command=>SpraySendNext}
         item "Step", {:icon=>File.join(Redcar::ICONS_DIRECTORY, "arrow-315.png"), :command=>SpraySendStep}
         item "List", {:icon=>File.join(Redcar::ICONS_DIRECTORY, "arrow-continue.png"), :command=>SpraySendList}
@@ -63,8 +63,8 @@ module Redcar
       def execute; Redcar.safely{SprayTabs.send_to_repl("continue")}; end
     end
 
-    class SpraySendStop < Redcar::Command
-      def execute; Redcar.safely{SprayTabs.send_to_repl("stop")}; end
+    class SpraySendInterrupt < Redcar::Command
+      def execute; Redcar.safely{SprayTabs.send_to_repl("interrupt")}; end
     end
     
   end
