@@ -28,18 +28,6 @@ class RDebugController
     @connected= true
   end
   
-  def connect_control
-    retries= 10
-    begin
-      @remote_control= Net::Telnet::new("Host"=> @host, "Port"=> @port[:control],
-      "Prompt"=> PROMPT[:control], "Telnetmode"=> false, "Timeout"=> 1, "Waittime"=> 1)
-    rescue
-      (sleep 0.1; retry) if 0<=(retries-=1)
-      raise("Timeout connecting to rdebug control on #{@host}:#{@port[:control]}")
-    end
-    @remote_control.waitfor(PROMPT[:control])
-  end
-  
   def execute_command(command)
     case command
     when /^\s*toggle_breakpoint/
@@ -58,15 +46,6 @@ class RDebugController
       send_command("del #{breaknum}")
     else
       send_command("break #{filename}:#{linenum}")
-    end
-  end
-  
-  def control_interrupt
-    begin
-      puts "interrupt"
-      @remote[:control].cmd('interrupt') || ''
-    rescue
-      connect(:control); retry
     end
   end
   
