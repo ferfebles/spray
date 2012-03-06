@@ -45,7 +45,7 @@ class RDebugController
       breaknum= send_command("info break").scan(/(\d+).*#{filename.gsub('/','\/')}:#{linenum}/).first.first
       send_command("del #{breaknum}")
     else
-      send_command("break #{filename}:#{linenum}")
+      send_command("break #{filename}:#{linenum}") #TODO problem with c:\ on windows
     end
   end
   

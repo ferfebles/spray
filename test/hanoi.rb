@@ -1,4 +1,6 @@
 
+puts "1:2 = 3:4"
+
 def hanoi(n,a,b,c)
    if n-1 > 0
       hanoi(n-1, a, c, b)
@@ -10,5 +12,5 @@ def hanoi(n,a,b,c)
     end
 end
 
-hanoi(20, :a, :b, :c)
+hanoi(3, :a, :b, :c)
 puts "Done!"

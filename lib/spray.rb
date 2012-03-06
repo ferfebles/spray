@@ -3,7 +3,8 @@ require 'spray_tabs'
 
 module Redcar
   class Spray
-    #menu and toolbar
+    ICONS_DIRECTORY = Redcar.icons_directory
+
     def self.menus
       Menu::Builder.build do
         sub_menu "Plugins" do
@@ -19,13 +20,13 @@ module Redcar
     
     def self.toolbars
       ToolBar::Builder.build do
-        item "Debug file", {:icon=>File.join(Redcar::ICONS_DIRECTORY, "arrow-step-over.png"), :command=>OpenSprayREPL}
-        item "Breakpoint", {:icon=>File.join(Redcar::ICONS_DIRECTORY, "control-pause.png"), :command=>SprayToggleBreakpoint}
-        item "Continue", {:icon=>File.join(Redcar::ICONS_DIRECTORY, "arrow-step.png"), :command=>SpraySendContinue}
-        item "Interrupt", {:icon=>File.join(Redcar::ICONS_DIRECTORY, "control-stop-square.png"), :command=>SpraySendInterrupt}
-        item "Next", {:icon=>File.join(Redcar::ICONS_DIRECTORY, "arrow-270.png"), :command=>SpraySendNext}
-        item "Step", {:icon=>File.join(Redcar::ICONS_DIRECTORY, "arrow-315.png"), :command=>SpraySendStep}
-        item "List", {:icon=>File.join(Redcar::ICONS_DIRECTORY, "arrow-continue.png"), :command=>SpraySendList}
+        item "Debug file", {:icon=>File.join(ICONS_DIRECTORY, "arrow-step-over.png"), :command=>OpenSprayREPL}
+        item "Breakpoint", {:icon=>File.join(ICONS_DIRECTORY, "control-pause.png"), :command=>SprayToggleBreakpoint}
+        item "Continue", {:icon=>File.join(ICONS_DIRECTORY, "arrow-step.png"), :command=>SpraySendContinue}
+        item "Interrupt", {:icon=>File.join(ICONS_DIRECTORY, "control-stop-square.png"), :command=>SpraySendInterrupt}
+        item "Next", {:icon=>File.join(ICONS_DIRECTORY, "arrow-270.png"), :command=>SpraySendNext}
+        item "Step", {:icon=>File.join(ICONS_DIRECTORY, "arrow-315.png"), :command=>SpraySendStep}
+        item "List", {:icon=>File.join(ICONS_DIRECTORY, "arrow-continue.png"), :command=>SpraySendList}
       end
     end
     
